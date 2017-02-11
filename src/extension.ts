@@ -14,8 +14,10 @@ class SocksCodeController {
      * if the text in change is the same as we've received in socket.
      */
     private _prevRemoteText: string;
+    private _windowMessagePrefix: string;
 
     constructor() {
+        this._windowMessagePrefix = 'sockscode-vscode:';
         this._socketIoCodeService = SocketIoCodeService.createInstance();
         this._socketIoCodeService.onCodeChange((data) => {
             const editor = window.activeTextEditor;
@@ -32,7 +34,7 @@ class SocksCodeController {
         });
         this._socketIoCodeService.onCreateRoom((_roomUuid) => {
             this._roomUuid = _roomUuid;
-            window.showInformationMessage(`Room created. Room uuid :${this._roomUuid}`);
+            window.showInformationMessage(`${this._windowMessagePrefix} Room created. Room uuid: ${this._roomUuid}`);
         });
         //vscode event subscriptions
         let subscriptions: Disposable[] = [];
@@ -69,7 +71,7 @@ class SocksCodeController {
     }
 
     private showRoom() {
-        window.showInformationMessage(`Your room uuid :${this._roomUuid}`);
+        window.showInformationMessage(`${this._windowMessagePrefix} Your room uuid: ${this._roomUuid}`);
     }
 
     private _onCodeChange() {
@@ -123,7 +125,7 @@ export function activate(context: ExtensionContext) {
                 socksCodeController.disconnect();
                 socksCodeController = null;
             }
-            window.showInformationMessage('dicsonnected');
+            window.showInformationMessage(`${this._windowMessagePrefix} disconnected`);
         })
     ];
 
